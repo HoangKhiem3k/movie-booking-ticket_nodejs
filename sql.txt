@@ -1,0 +1,109 @@
+drop database if exists movie;
+create database movie;
+use movie;
+
+create table loai_nguoi_dung(
+	maLoaiNguoiDung varchar(50) primary key,
+	tenLoai nvarchar(50)
+);
+insert into loai_nguoi_dung values ('KhachHang','Khách hàng'),('QuanTri','Quản trị');
+
+create table nguoi_dung(
+	maNguoiDung int primary key auto_increment not null,
+    taiKhoan varchar(255) not null,
+    matKhau varchar(255) not null,
+	email varchar(255),
+    soDt varchar(10),
+    maNhom varchar(10) default 'GP01',
+    maLoaiNguoiDung varchar(50) default "KhachHang",
+    hoTen nvarchar(255) 
+);
+create table phim(
+	maPhim int primary key auto_increment not null,
+    tenPhim nvarchar(255) not null,
+	biDanh varchar(255),
+	trailer varchar(255),
+    hinhAnh text,
+    moTa text,
+    maNhom varchar(10) default 'GP01',
+    hot boolean default true,
+    dangChieu boolean default false,
+    sapChieu boolean default true,
+    ngayKhoiChieu date,
+    danhGia int default 0
+);
+create table ve(
+	maVe int primary key auto_increment not null,
+    maNguoiDung int,
+    maPhim int,
+    CONSTRAINT FK_nguoi_dung_phim_1
+	FOREIGN KEY (maNguoiDung) REFERENCES nguoi_dung(maNguoiDung),	
+	CONSTRAINT FK_nguoi_dung_phim_2
+	FOREIGN KEY (maPhim) REFERENCES phim(maPhim)
+);
+create table he_thong_rap(
+	maHeThongRap varchar(50) primary key not null,
+    tenHeThongRap nvarchar(255) not null,
+    biDanh nvarchar(255),
+    logo text
+);
+create table cum_rap(
+	maCumRap varchar(50) primary key not null,
+    tenCumRap text not null,
+    diaChi text not null,    
+    maHeThongRap varchar(50),
+    foreign key (maHeThongRap) references he_thong_rap(maHeThongRap)
+);
+create table rap(
+	maRap int primary key not null,
+    tenRap nvarchar(50),
+    maCumRap varchar(50),
+    foreign key (maCumRap) references cum_rap(maCumRap)
+);
+insert into rap(maRap,tenRap,maCumRap) values('461','Rạp 1','bhd-star-cineplex-bitexco'),
+('462','Rạp 2','bhd-star-cineplex-bitexco'),
+('511','Rạp 1','cgv-aeon-binh-tan'),
+('512','Rạp 2','cgv-aeon-binh-tan'),
+('521','Rạp 1','cgv-aeon-tan-phu'),
+('522','Rạp 2','cgv-aeon-tan-phu'),
+
+('721','Rạp 1','cns-hai-ba-trung'),
+('722','Rạp 2','cns-hai-ba-trung'),
+('731','Rạp 1','cns-quoc-thanh'),
+('732','Rạp 2','cns-quoc-thanh'),
+
+('741','Rạp 1','glx-huynh-tan-phat'),
+('742','Rạp 2','glx-huynh-tan-phat'),
+('751','Rạp 2','glx-kinh-duong-vuong'),
+('752','Rạp 2','glx-kinh-duong-vuong');
+create table phim_rap(
+	maLichChieu varchar(50) primary key not null,
+    maRap int,
+    maPhim int,
+    CONSTRAINT FK_rap_phim_1
+	FOREIGN KEY (maRap) REFERENCES rap(maRap),	
+	CONSTRAINT FK_rap_phim_2
+	FOREIGN KEY (maPhim) REFERENCES phim(maPhim)
+);
+create table gio_chieu(
+	id int primary key auto_increment not null,
+    ngayChieuGioChieu datetime,
+    maRap int, 
+    foreign key (maRap) references rap(maRap)
+);
+create table ghe(
+	maGhe int primary key auto_increment not null,
+    tenGhe varchar(50) not null,
+    loaiGhe varchar(50),
+    stt varchar(10),
+    giaVe int,
+    daDat boolean default false,
+    maGioChieu int,
+    foreign key (maGioChieu) references gio_chieu(id)
+);
+
+
+
+
+
+
